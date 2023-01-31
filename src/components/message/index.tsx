@@ -1,4 +1,3 @@
-import { useState } from "react"
 import styled from "styled-components"
 
 
@@ -9,11 +8,12 @@ interface InputStyleProps {
 interface MessagePropsT {
   setSelItem: any
   message: string
+  selectedMessage: boolean
+  setSelectedMessage: any
+  handleDoubleClickDelete: any
 }
 
-const Message = ({ setSelItem, message }: MessagePropsT) => {
-  const [selectedMessage, setSelectedMessage] = useState(false)
-
+const Message = ({ setSelItem, message, selectedMessage, setSelectedMessage, handleDoubleClickDelete }: MessagePropsT) => {
   const StyledMessage = styled.div<InputStyleProps>`
     background: ${props => props.selected ? '#324BFF 0% 0% no-repeat padding-box' : '#F7F7F7 0% 0% no-repeat padding-box'};
     color: ${props => props.selected ? '#FFF' : '#333333'};
@@ -28,14 +28,13 @@ const Message = ({ setSelItem, message }: MessagePropsT) => {
       transition: ease-in-out 0.3s background;
     }
   `
-  const handleSelected = (data: string) => {
-    setSelItem(data)
+  const handleClick = (message: string) => {
     setSelectedMessage(true)
+    setSelItem(message)
   }
 
-  console.log(selectedMessage)
 
-  return (<StyledMessage selected={selectedMessage} onClick={() => handleSelected(message)}>{message}</StyledMessage>)
+  return (<div onDoubleClick={() => handleDoubleClickDelete(message)}><StyledMessage selected={selectedMessage} onClick={() => handleClick(message)}>{message}</StyledMessage></div>)
 
 }
 

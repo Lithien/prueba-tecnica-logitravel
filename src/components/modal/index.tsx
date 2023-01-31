@@ -26,8 +26,8 @@ const AddMessage = ({ open, setOpen, handleSave }: AddMessagePropsT) => {
     position: absolute;
     top: 50%;
     left: 50%;
-    margin-top: -137.5px;
-    margin-left: -350px;
+    margin-top: -147.5px;
+    margin-left: -400px;
     &::backdrop {
       background: #0000001A 0% 0% no-repeat padding-box;
     }

@@ -11,17 +11,16 @@ const Container = () => {
   const [selItem, setSelItem] = useState<Array<string>>([])
   const [messageKey, setMessageKey] = useState(nanoid())
 
-  useEffect(() => {
-    console.log(localStorage.getItem('messages'))
-    // setMessages(JSON.parse(localStorage.getItem('messages') ?? ''))
-  }, [])
+  // useEffect(() => {
+  //   console.log(localStorage.getItem('messages'))
+  //   // setMessages(JSON.parse(localStorage.getItem('messages') ?? ''))
+  // }, [])
 
   useEffect(() => {
-    console.log('entra')
     localStorage.setItem('messages', JSON.stringify(messages))
-  }, [messages])
-  
-  
+  }, [open])
+
+
 
   const selectItems = (item: string) => {
     setSelItem(oldItems => [...oldItems, item])
@@ -35,6 +34,16 @@ const Container = () => {
     }
   }
 
+  const deleteMessage = (message: string) => {
+    const index = messages.indexOf(message)
+    console.log(index)
+    if (index !== -1) {
+      messages.splice(index, 1)
+    }
+    setMessageKey(nanoid())
+  }
+
+
   const handleDelete = () => {
     selItem.forEach(data => {
       const index = messages.indexOf(data)
@@ -42,6 +51,9 @@ const Container = () => {
         messages.splice(index, 1)
       }
     })
+    if (messages.length === 0) {
+      setSelItem([])
+    }
     setMessageKey(nanoid())
   }
 
@@ -89,16 +101,15 @@ const Container = () => {
       margin: 0;
     }
   `
-console.log(selItem)
   return (
     <StyledParent>
       <StyledContainer>
         <StyledTitle>This is a technical proof</StyledTitle>
         <StyledDescription>Lorem ipsum dolor sit amet consectetur adipiscing, elit mus primis nec inceptos. Lacinia habitasse arcu molestie maecenas cursus quam nunc, hendrerit posuere augue fames dictumst placerat porttitor, dis mi pharetra vestibulum venenatis phasellus.</StyledDescription>
-        <MessageContainer key={messageKey} setSelItem={selectItems} messages={messages} />
+        <MessageContainer deleteMessage={deleteMessage} key={messageKey} setSelItem={selectItems} messages={messages} />
         <StyledButtonContainer>
           <StyledButton handleClick={() => handleUndo} content={<CiUndo />} transparent></StyledButton>
-          <StyledButton handleClick={() => handleDelete()} content='delete'></StyledButton>
+          <StyledButton handleClick={() => handleDelete()} content='delete' disabled={selItem.length === 0}></StyledButton>
           <StyledButton handleClick={() => setOpen(true)} content='add'></StyledButton>
         </StyledButtonContainer>
       </StyledContainer>
