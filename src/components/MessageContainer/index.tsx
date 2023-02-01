@@ -1,15 +1,15 @@
 import styled from "styled-components"
 import { nanoid } from "nanoid";
-import Message from "../message";
 import { useState } from "react";
+import { Message } from "../../interfaces/message";
+import MessageItem from "../message";
 
 interface MessageContainerPropsT {
-  messages: Array<string>
+  messages: Array<Message>
   setSelItem: any
-  deleteMessage: any
 }
 
-const MessageContainer = ({ messages, setSelItem, deleteMessage }: MessageContainerPropsT) => {
+const MessageContainer = ({ messages, setSelItem }: MessageContainerPropsT) => {
   const [selectedMessage, setSelectedMessage] = useState()
   const StyledContainer = styled.div`
     background: #F7F7F7 0% 0% no-repeat padding-box;
@@ -24,7 +24,7 @@ const MessageContainer = ({ messages, setSelItem, deleteMessage }: MessageContai
   return (
     <div>
       <StyledContainer>
-        {messages.map((message, index) => <Message handleDoubleClickDelete={deleteMessage} setSelectedMessage={setSelectedMessage} key={index} message={message} setSelItem={setSelItem} selectedMessage={selectedMessage ?? false} />)}
+        {messages.map((message, index) => <MessageItem key={index} index={index} setSelectedMessage={setSelectedMessage} item={message} setSelItem={setSelItem} selectedMessage={selectedMessage ?? false} />)}
       </StyledContainer>
     </div>
   )

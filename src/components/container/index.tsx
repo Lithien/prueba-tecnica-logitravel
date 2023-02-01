@@ -1,70 +1,57 @@
 import styled from "styled-components"
 import StyledButton from "../button";
 import MessageContainer from "../MessageContainer";
-import { CiUndo } from 'react-icons/ci';
+import { ImUndo } from 'react-icons/im';
 import AddMessage from "../modal";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { nanoid } from "nanoid";
+import { Message } from "../../interfaces/message";
+
 const Container = () => {
   const [open, setOpen] = useState(false)
-  const [messages, setMessages] = useState<Array<string>>([])
-  const [selItem, setSelItem] = useState<Array<string>>([])
+  const [messages, setMessages] = useState<Array<Message>>([])
+  const [selItems, setSelItems] = useState<Array<Message>>([])
+  const [deletedItems, setDeletedItems] = useState<Array<Message>>([])
   const [messageKey, setMessageKey] = useState(nanoid())
 
-  // useEffect(() => {
-  //   console.log(localStorage.getItem('messages'))
-  //   // setMessages(JSON.parse(localStorage.getItem('messages') ?? ''))
-  // }, [])
+  const isInArray = (item: Message) => selItems.some(message => message.id === item.id)
 
-  useEffect(() => {
-    localStorage.setItem('messages', JSON.stringify(messages))
-  }, [open])
-
-
-
-  const selectItems = (item: string) => {
-    setSelItem(oldItems => [...oldItems, item])
+  const selectItems = (item: Message, index: number) => {
+    const message: Message = { message: item.message, selected: !item.selected, id: item.id }
+    if (message.selected && !isInArray(item)) {
+      setSelItems(oldItems => [...oldItems, message])
+    } else {
+      selItems.splice(index, 1)
+    }
+    let newMessages = [...messages]
+    newMessages[index] = message
+    setMessages(newMessages)
   }
-
 
   const handleSave = (data: string) => {
     if (data !== '') {
-      setMessages(oldMessages => [...oldMessages, data])
+      setMessages(oldMessages => [...oldMessages, { message: data, selected: false, id: nanoid() }])
       setOpen(false)
     }
   }
 
-  const deleteMessage = (message: string) => {
-    const index = messages.indexOf(message)
-    console.log(index)
-    if (index !== -1) {
-      messages.splice(index, 1)
-    }
-    setMessageKey(nanoid())
-  }
-
-
   const handleDelete = () => {
-    selItem.forEach(data => {
+    selItems.forEach(data => {
       const index = messages.indexOf(data)
+      setDeletedItems(oldDeleted => [...oldDeleted, { message: data.message, id: data.id, selected: !data.selected }])
       if (index !== -1) {
         messages.splice(index, 1)
       }
     })
-    if (messages.length === 0) {
-      setSelItem([])
-    }
+    setSelItems([])
     setMessageKey(nanoid())
   }
 
-  const handleUndo = () => {
-
+  const handleUndo = (e: any) => {
+    e.stopPropagation()
+    setMessages([...messages, ...deletedItems])
+    setDeletedItems([])
   }
-
-  const StyledParent = styled.div`
-    display: grid;
-    place-items: center;
-  `;
 
   const StyledContainer = styled.div`
     width: 900px;
@@ -73,8 +60,12 @@ const Container = () => {
     border-radius: 20px;
     opacity: 1;
     padding: 50px;
-  `;
-
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -500px;
+    margin-top: -312.5px;
+  `
   const StyledTitle = styled.h1`
     text-align: center;
     color: #333333;
@@ -83,8 +74,7 @@ const Container = () => {
     font-size: 40px;
     font-family: 'Montserrat';
     font-weight: 500;
-  `;
-
+  `
   const StyledDescription = styled.div`
     text-align: center;
     color: #333333;
@@ -102,19 +92,19 @@ const Container = () => {
     }
   `
   return (
-    <StyledParent>
+    <>
       <StyledContainer>
         <StyledTitle>This is a technical proof</StyledTitle>
         <StyledDescription>Lorem ipsum dolor sit amet consectetur adipiscing, elit mus primis nec inceptos. Lacinia habitasse arcu molestie maecenas cursus quam nunc, hendrerit posuere augue fames dictumst placerat porttitor, dis mi pharetra vestibulum venenatis phasellus.</StyledDescription>
-        <MessageContainer deleteMessage={deleteMessage} key={messageKey} setSelItem={selectItems} messages={messages} />
+        <MessageContainer key={messageKey} setSelItem={selectItems} messages={messages} />
         <StyledButtonContainer>
-          <StyledButton handleClick={() => handleUndo} content={<CiUndo />} transparent></StyledButton>
-          <StyledButton handleClick={() => handleDelete()} content='delete' disabled={selItem.length === 0}></StyledButton>
+          <StyledButton handleClick={(e: any) => handleUndo(e)} content={<ImUndo />} disabled={deletedItems.length === 0} transparent></StyledButton>
+          <StyledButton handleClick={() => handleDelete()} content='delete' disabled={selItems.length === 0}></StyledButton>
           <StyledButton handleClick={() => setOpen(true)} content='add'></StyledButton>
         </StyledButtonContainer>
       </StyledContainer>
       <AddMessage key={nanoid()} open={open} setOpen={setOpen} handleSave={handleSave} />
-    </StyledParent>
+    </>
   )
 }
 

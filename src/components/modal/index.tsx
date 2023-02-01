@@ -14,7 +14,9 @@ const AddMessage = ({ open, setOpen, handleSave }: AddMessagePropsT) => {
     background: #0000001A 0% 0% no-repeat padding-box;
     height: 100%;
     width: 100%;
-    position: absolute;
+    position: fixed;
+    top: 0;
+    left: 0;
   `
   const StyledModal = styled.div`
     width: 700px;
@@ -67,7 +69,7 @@ const AddMessage = ({ open, setOpen, handleSave }: AddMessagePropsT) => {
             <StyledTitle>Add item to list</StyledTitle>
             <StyledInput autoFocus type='text' value={message} placeholder="Type the text here..." onChange={(e) => setMessage(e.target.value)} />
             <StyledButtonContainer>
-              <StyledButton handleClick={() => handleSave(message)} content='add' />
+              <StyledButton handleClick={() => handleSave(message)} content='add' disabled={message === ''} />
               <StyledButton handleClick={() => setOpen(false)} content='cancel' transparent />
             </StyledButtonContainer>
           </StyledModal>

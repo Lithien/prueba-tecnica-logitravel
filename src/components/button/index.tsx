@@ -15,7 +15,7 @@ interface StyledButtonT {
 const StyledButton = ({ content, transparent, disabled, handleClick }: StyledButtonPropsT) => {
   const StyledButtons = styled.button<StyledButtonT>`
     background: ${props => props.disabledStyle ? '#324bff7a' : props.transparent ? '#FFF' : '#324BFF 0% 0% no-repeat padding-box'};
-    color: ${props => !props.transparent ? '#FFF' : '#324BFF'};
+    color: ${props => props.disabledStyle ? '#FFF' : !props.transparent ? '#FFF' : '#324BFF'};
     border: 1px solid #324BFF;
     border-radius: 50px;
     text-align: center;

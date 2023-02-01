@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import { Message } from "../../interfaces/message"
 
 
 interface InputStyleProps {
@@ -7,13 +8,13 @@ interface InputStyleProps {
 
 interface MessagePropsT {
   setSelItem: any
-  message: string
+  item: Message
   selectedMessage: boolean
   setSelectedMessage: any
-  handleDoubleClickDelete: any
+  index: number
 }
 
-const Message = ({ setSelItem, message, selectedMessage, setSelectedMessage, handleDoubleClickDelete }: MessagePropsT) => {
+const MessageItem = ({ setSelItem, item, selectedMessage, setSelectedMessage, index }: MessagePropsT) => {
   const StyledMessage = styled.div<InputStyleProps>`
     background: ${props => props.selected ? '#324BFF 0% 0% no-repeat padding-box' : '#F7F7F7 0% 0% no-repeat padding-box'};
     color: ${props => props.selected ? '#FFF' : '#333333'};
@@ -28,14 +29,15 @@ const Message = ({ setSelItem, message, selectedMessage, setSelectedMessage, han
       transition: ease-in-out 0.3s background;
     }
   `
-  const handleClick = (message: string) => {
-    setSelectedMessage(true)
-    setSelItem(message)
+  const handleClick = (e: any, item: Message) => {
+    e.preventDefault()
+    setSelectedMessage(!selectedMessage)
+    setSelItem(item, index)
   }
 
 
-  return (<div onDoubleClick={() => handleDoubleClickDelete(message)}><StyledMessage selected={selectedMessage} onClick={() => handleClick(message)}>{message}</StyledMessage></div>)
+  return (<StyledMessage selected={item.selected} onClick={(e) => handleClick(e, item)}>{item.message}</StyledMessage>)
 
 }
 
-export default Message
+export default MessageItem
