@@ -53,6 +53,15 @@ const Container = () => {
     setDeletedItems([])
   }
 
+  const StyledBackground = styled.div`
+    background: transparent linear-gradient(135deg, #A1C4FD 0%, #C2E9FB 100%) 0% 0% no-repeat padding-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  `
+
   const StyledContainer = styled.div`
     width: 900px;
     background: #FFFFFF 0% 0% no-repeat padding-box;
@@ -92,7 +101,7 @@ const Container = () => {
     }
   `
   return (
-    <>
+    <StyledBackground>
       <StyledContainer>
         <StyledTitle>This is a technical proof</StyledTitle>
         <StyledDescription>Lorem ipsum dolor sit amet consectetur adipiscing, elit mus primis nec inceptos. Lacinia habitasse arcu molestie maecenas cursus quam nunc, hendrerit posuere augue fames dictumst placerat porttitor, dis mi pharetra vestibulum venenatis phasellus.</StyledDescription>
@@ -104,7 +113,7 @@ const Container = () => {
         </StyledButtonContainer>
       </StyledContainer>
       <AddMessage key={nanoid()} open={open} setOpen={setOpen} handleSave={handleSave} />
-    </>
+    </StyledBackground>
   )
 }
 
